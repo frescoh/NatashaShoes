@@ -6,14 +6,14 @@ import datetime
 from datetime import date, timedelta
 import random
 import clsMsjAlert as Mje
-import clsC_Usuarios as CrudUsuarios
+import Controladores.clsC_Usuarios as CrudUsuarios
 import clsSendMail as EnviarMail
 from PyQt5.QtWidgets import *
 
 class clsRegistroCta(QtWidgets.QMainWindow):
     def __init__(self,fila=None,tabla=None):
        super(clsRegistroCta, self).__init__()
-       uic.loadUi('ui/registroCta.ui',self)
+       uic.loadUi('ui files/registroCta.ui',self)
        self.fchActual=datetime.date.today()
        self.bd=CrudUsuarios.clsC_Usuarios()
        self.listTCta=self.bd.getTiposCta()

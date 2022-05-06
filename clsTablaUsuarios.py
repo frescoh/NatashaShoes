@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QTableWidgetItem
 import sys
 
-import clsC_Usuarios as CrudUsuarios
+import Controladores.clsC_Usuarios as CrudUsuarios
 import clsRegistroCta as loadForm
 import datetime
 
@@ -12,7 +12,7 @@ import datetime
 class clsTablaUsuarios(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(clsTablaUsuarios, self).__init__(parent)
-        uic.loadUi('ui/listado.ui', self)
+        uic.loadUi('ui files/listado.ui', self)
         self.bd = CrudUsuarios.clsC_Usuarios()
         self.table= self.bd.getTablaSP()
         self.setupUiComponents()

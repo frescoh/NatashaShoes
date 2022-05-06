@@ -1,4 +1,4 @@
-import clsConexion as Conexion
+import Controladores.clsConexion as Conexion
 import datetime
 
 class clsC_Usuarios():
@@ -107,7 +107,7 @@ class clsC_Usuarios():
 
 
     def getTiposCta(self):
-        query=f"SELECT * FROM `TipoCuenta`"
+        query=f"SELECT * FROM `tipocuenta`"
         result = self.bdControl.run_query(query)
         if (len(result)==0):
             return None

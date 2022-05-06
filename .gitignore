@@ -1,0 +1,4 @@
+.vscode/*
+*pycache*/*
+Controladores/*pycache*/*
+Controladores/Credenciales.py 

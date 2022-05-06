@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QTableWidgetItem
-import clsC_Usuarios as CrudUsuarios
+import Controladores.clsC_Usuarios as CrudUsuarios
 import clsRegistroCta as RegistroCta
 import clsMsjAlert as Mje
 import datetime
@@ -13,7 +13,7 @@ class clsLogin(QtWidgets.QMainWindow):
     
     def __init__(self):
         super(clsLogin, self).__init__()
-        uic.loadUi('ui/login.ui',self)
+        uic.loadUi('ui files/login.ui',self)
         self.bd=CrudUsuarios.clsC_Usuarios()
         self.setupUi()
         
@@ -31,6 +31,7 @@ class clsLogin(QtWidgets.QMainWindow):
             if self.controlaFechaHora(cta[0][2]):
                 if contrasenia==cta[0][1]:
                     print("Login correcto.")
+                    self.btnIngresar.setVisible(False)
                     self.p = principal.clsTable(self.bd.getId(cta[0][0])[0][0])
                     self.p.show()
 

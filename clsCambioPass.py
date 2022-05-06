@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, uic
 
 
 import sys
-import clsC_Usuarios as CrudUsuarios
+import Controladores.clsC_Usuarios as CrudUsuarios
 import clsMsjAlert as Mje
 import clsSendMail as EnviarMail
 
@@ -11,7 +11,7 @@ class clsCambioPass(QtWidgets.QMainWindow):
 
     def __init__(self,user):
         super(clsCambioPass, self).__init__()
-        uic.loadUi('ui/changePass.ui',self)
+        uic.loadUi('ui files/changePass.ui',self)
         self.user=user
         self.bd=CrudUsuarios.clsC_Usuarios()
         self.idUser=self.bd.getId(user)[0][0]

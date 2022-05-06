@@ -7,7 +7,7 @@ class clsMsjAlert(QtWidgets.QMainWindow):
 	def __init__(self,mje):
 		super(clsMsjAlert, self).__init__()
 		self.mje=mje
-		uic.loadUi('ui/msj.ui',self)
+		uic.loadUi('ui files/msj.ui',self)
 
 
 		self.setupUi()

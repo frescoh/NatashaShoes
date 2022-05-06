@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "D:/Documentos/UNSa/TUP/2021/DiPy/Codigos/Interfaz Grafica"
+		}
+	],
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Python: Archivo actual",
+				"type": "python",
+				"request": "launch",
+				"program": "${file}",
+				"console": "integratedTerminal"
+			}
+		]
+	}
+}

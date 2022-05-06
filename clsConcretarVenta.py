@@ -64,6 +64,7 @@ class clsConcretarVenta(QtWidgets.QMainWindow):
             self.lblDNI.setVisible(False)
             self.btnConsultarDNI.setVisible(False)
             self.btnNuevoCliente.setVisible(False)
+            self. btnFinalizar.setVisible(False)
             self.btnFinalizar.move(30,510)
             self.btnCancelar.move(370,510)
             self.resize(471,585)
@@ -87,6 +88,7 @@ class clsConcretarVenta(QtWidgets.QMainWindow):
             if result!= None:
                 self.ledDNI.setText(result[0][1]+" "+result[0][2])
                 self.__idCliente = result[0][0]
+                self.btnFinalizar.setVisible(True)
         except Exception as e:
                 print('Error en ConsultarUsuario ' + str(e))
         
@@ -112,24 +114,25 @@ class clsConcretarVenta(QtWidgets.QMainWindow):
 
 
     def cargarVenta(self):
-        try:
-            if self.clsTabla.getIdRol() == 12:
-                id= self.objVenta.insert(0 ,self.clsTabla.getIdUser(), datetime.now(),float(self.tblCarrito.item(self.tblCarrito.rowCount()-1,3).text()),self.getIndice(self.cboMedioDePago.currentText()))[0][0]    
-            else:
-                id= self.objVenta.insert(self.clsTabla.getIdUser() , self.__idCliente, datetime.now(),float(self.tblCarrito.item(self.tblCarrito.rowCount()-1,3).text()),self.getIndice(self.cboMedioDePago.currentText()))[0][0]
-            #self.objVenta.insert(idVendedor, idComprador, fecha, importe, idMedioDePago)
-            for i in range(self.tblCarrito.rowCount()-1):
-                idProducto = int(self.tblCarrito.item(i,0).text().split('/')[0])
-                precio = self.objProducto.getPrecio(idProducto)[0][0]
-                cantidad= int(self.tblCarrito.item(i,2).text())
-                self.objPHV.insert(id, idProducto, cantidad,precio)
-            self.clsTabla.limpiarCarrito()
-            self.clsTabla.loadTable()
-            QMessageBox.warning(self, 'Felicidades!', 'La venta fue cargada con exito')
-            self.__vendido = True
-            self.close()
-        except Exception as e:
-                print('Error en cargarVenta ' + str(e))
+       # try:
+        if self.clsTabla.getIdRol() == 12:
+            id= self.objVenta.insert(0 ,self.clsTabla.getIdUser(), datetime.now(),float(self.tblCarrito.item(self.tblCarrito.rowCount()-1,3).text()),self.getIndice(self.cboMedioDePago.currentText()))[0][0]    
+        else:
+            id= self.objVenta.insert(self.clsTabla.getIdUser() , self.__idCliente, datetime.now(),float(self.tblCarrito.item(self.tblCarrito.rowCount()-1,3).text()),self.getIndice(self.cboMedioDePago.currentText()))[0][0]
+        id= int(id)
+        #self.objVenta.insert(idVendedor, idComprador, fecha, importe, idMedioDePago)
+        for i in range(self.tblCarrito.rowCount()-1):
+            idProducto = int(self.tblCarrito.item(i,0).text().split('/')[0])
+            precio = float(self.objProducto.getPrecio(idProducto)[0][0])
+            cantidad= int(self.tblCarrito.item(i,2).text())
+            self.objPHV.insert(id, idProducto, cantidad,precio)
+        self.clsTabla.limpiarCarrito()
+        self.clsTabla.loadTable()
+        QMessageBox.warning(self, 'Felicidades!', 'La venta fue cargada con exito')
+        self.__vendido = True
+        self.close()
+        #except Exception as e:
+        #       print('Error en cargarVenta ' + str(e))
         
             
 
