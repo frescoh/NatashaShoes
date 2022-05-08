@@ -4,7 +4,7 @@ class clsCUsuario:
         def __init__(self):
                  self.bd= conector.clsConexion()
     
-        def getData(self,idUser):
+        def     getData(self,idUser):
                 query = "SELECT "\
                                 +"usuario.nombre AS Nombre, "\
                                 +"tipocuenta.idTCta AS 'ID Tipo', "\

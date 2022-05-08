@@ -1,5 +1,6 @@
 *.pyc
 .vscode/*
+*/__pycache__/*
 Controladores/__pycache__
 Controladores/Credenciales.py 
 Natasha Shoes.code-workspace

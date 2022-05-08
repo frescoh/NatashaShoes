@@ -14,12 +14,36 @@ class clsC_Usuarios():
             return result
 
     def getTablaSP(self):
-        query=f"SELECT `idUser`,`dni`,`nombre`,`apellido`,`fchNac`,`direccion`,`mail`,`numTel`,`fchAlta`,`fchBaja`,`user`, tipocuenta.descripcion FROM `usuario` INNER JOIN tipocuenta ON usuario.idTCta=tipocuenta.idTCta"
+        query=f"SELECT "\
+            +"`idUser`,`dni`,`nombre`,`apellido`,`fchNac`,`direccion`,`mail`,`numTel`,`fchAlta`,`fchBaja`,`user`, tipocuenta.descripcion "\
+            +"FROM "\
+                +"`usuario` "\
+            +"INNER JOIN tipocuenta ON usuario.idTCta=tipocuenta.idTCta;"
         result = self.bdControl.run_query(query)
         if (len(result)==0):
             return None
         else:
             return result
+    
+    def getTabla(self,ids):
+        """ Hernan
+        Consulta que recibe como parametro un array de IDs de Tipo de cuenta y devuelve los registros de usuarios que correponden a esos tipos"""
+        query=f"SELECT "\
+                +"`idUser`,`dni`,`nombre`,`apellido`,`fchNac`,`direccion`,`mail`,`numTel`,`fchAlta`,`fchBaja`,`user`, tipocuenta.descripcion "\
+            +"FROM `usuario` "\
+            +"INNER JOIN tipocuenta ON usuario.idTCta=tipocuenta.idTCta "\
+            +"WHERE tipocuenta.idTCta=9999"
+        if len(ids) >0:
+            for i in range(len(ids)):
+                query = query +f" OR tipocuenta.idTCta = {ids[i]}"
+        query = query+";"
+
+        result = self.bdControl.run_query(query)
+        if (len(result)==0):
+            return None
+        else:
+            return result
+
 
     def getDatos(self,idUs):
         query=f"SELECT * FROM `usuario` WHERE usuario.idUser='{idUs}'"

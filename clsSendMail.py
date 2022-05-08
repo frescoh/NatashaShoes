@@ -1,6 +1,6 @@
 import smtplib
 import email.message
-
+import Controladores.Credenciales as credencial
 
 class clsSendMail:
     def __init__(self,password,nombre,correo,user=None,flag=None):
@@ -122,9 +122,9 @@ class clsSendMail:
         
 
 
-        msg['From'] = Credencial.mail
+        msg['From'] = credencial.mail
         msg['To'] = correo
-        password = Credencial.passMail
+        password = credencial.passMail
         msg.add_header('Content-Type', 'text/html')
         msg.set_payload(email_content)
 

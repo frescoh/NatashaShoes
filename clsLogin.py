@@ -49,6 +49,7 @@ class clsLogin(QtWidgets.QMainWindow):
 
 
     def controlaFechaHora(self,fchHora):
+        """Que  """
         #Fecha y hora UTC-00
         if fchHora!=None:
             ahora=datetime.datetime.utcnow()
@@ -57,7 +58,6 @@ class clsLogin(QtWidgets.QMainWindow):
             else:
                 return False
         return True
-
 
 
 

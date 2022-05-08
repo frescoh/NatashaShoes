@@ -32,7 +32,6 @@ class clsTable(QtWidgets.QMainWindow):
         #Tabla Mercaderia
         self.__row = -1
         self.__column = -1
-        self.__numColumns =[] # ['1',...,'n']
         self.tabla = []
 
         #Carrito
@@ -43,17 +42,7 @@ class clsTable(QtWidgets.QMainWindow):
         #self.setupVistaUser(self.__tipo)
 
     
-    def verUsuarios(self):
-        pass
-
-    def cambiarPass(self):
-        pass
-
-    def getIdRol(self):
-        return self.__idRolUsuario
-    
-    def getIdUser(self):
-        return self.__idUser
+   
     
 
     def setupUiComponents(self):
@@ -69,7 +58,7 @@ class clsTable(QtWidgets.QMainWindow):
         self.btnEliminar.setEnabled(False)
         self.btnModificar.setEnabled(False)
         self.btnEliminarFila.setEnabled(False)
-
+        items = self.cboCondicion.addItems(['en','<','=','>'])
         
 
         # Acciones Botones
@@ -91,9 +80,10 @@ class clsTable(QtWidgets.QMainWindow):
         self.tblCarrito.cellClicked.connect(self.marcarFila)
 
         #Menu
-        self.menuVentas.triggered.connect(self.verVentas)
-        self.menuUsuarios.triggered.connect(self.verUsuarios)
-        self.menuCambiarPass.triggered.connect(self.changePass)
+        self.menuUsuarioCambiarPass.triggered.connect(self.changePass)
+        self.menuAdministrarVentas.triggered.connect(self.verVentas)
+        self.menuAdministrarUsuarios.triggered.connect(self.verUsuarios)
+        self.menuAdministrarProveedores.triggered.connect(self.verProveedores)
 
         
         # Line edit
@@ -104,6 +94,8 @@ class clsTable(QtWidgets.QMainWindow):
         
 
         if self.__idRolUsuario  == 0 : # 0 - Admin | 1 - Vendedor | 12 - Cliente 
+            """ 
+            Habilita las opciones administrativas solo para los administradores"""
             self.frameAdmin.setVisible(True)
             self.menuBar.setVisible(True)
         
@@ -112,25 +104,44 @@ class clsTable(QtWidgets.QMainWindow):
 
         self.loadTable()
         self.loadCarrito(self.tblCarrito)
-        items = self.cboColumna.addItems(self.__numColumns)
-        self.sbFila.setMaximum(self.tblMercaderia.rowCount())
-        self.sbFila.setMinimum(1)
+
+    def verProveedores(self):
+        """Muestra la lista de proveedores del negocio"""
+        pass
+
+
+
+    def getIdRol(self):
+        """
+        Devuelve el ID del rol de usuario almacenado en la tabla tipocuenta
+        Con esto podemos saber el rol del usuario según el numero de id"""
+        return self.__idRolUsuario
     
-    
+    def getIdUser(self):
+        """Devuelve el ID  del usuario. Con esta informacion podemos saber que usuario es el que se leggeó"""
+        return self.__idUser
 
     def verVentas(self):
+        """Muestra una tabla con todas las ventas realizadas desde el sistema"""
         self.v= ventas.clsRegistroDeVentas()
         self.v.show()
-    
+
     def verUsuarios(self):
+        """Muestra una tabla con todos los usuarios registrados en el sistema"""
         self.u = formUsuarios.clsTablaUsuarios()
         self.u.show()
 
     def changePass(self):
+        """
+        Permite cambiar la contraseña del usuario actual
+        Envía un mail al correo registrado para el usuario, informando que se raalizó la accion
+        """
         self.c = cambio.clsCambioPass(self.__nickUsuario)
         self.c.show()
 
-    def loadCarrito(self,carrito):        
+    def loadCarrito(self,carrito):      
+        """
+        Carga el carrito con los productos que se vayan seleecionando para la venta"""  
         try:
             result= self.objCarrito.getCarrito(self.__idUser) 
             while carrito.rowCount():
@@ -194,6 +205,8 @@ class clsTable(QtWidgets.QMainWindow):
 
 
     def quitarProducto(self):
+        """
+        Elimina un producto del carrito y lo devuelve a la tabla de productos"""
         try:
             idProducto = int(self.tblCarrito.item(self.__rowCarrito,0).text().split('/')[0])
             self.objCarrito.deleteProducto(self.__idUser,idProducto)
@@ -204,6 +217,12 @@ class clsTable(QtWidgets.QMainWindow):
 
 
     def definirTipoUSer(self): # 0 - admin  1 - Vendedor 
+        """
+        Hace una lectura de la tabla usuario y carga los datos del usuarui actual en variables locales
+        nombreUsurio: Nombre real del usuario
+        idRolUsuario: Define el rol dentro del sistema, puede ser administrador, vendedor o cliente
+        nickUsuario: Además del nombre real, el usuario puede tener un nick que se almacena en el campo user de su registro
+        """
         try:
             result = self.objUsuario.getData(self.__idUser)
             if result != None:
@@ -212,24 +231,22 @@ class clsTable(QtWidgets.QMainWindow):
                 self.__nickUsuario = result[0][2]
         except Exception as e:
                 print('Error en la definirTipoUser ' + str(e))
-
-
-
-
-
-
+                
     def selectCell(self,row,column):
+        """
+        Define las acciones que se realizan cuando se hace click sobre una celda de la tabla"""
         self.__row = row
         self.__column = column
-        self.sbFila.setValue(row+1)
-        self.cboColumna.setCurrentText(str(column+1))
         self.btnCargarEnCarrito.setEnabled(True)
         self.btnVender.setEnabled(True)
         self.btnModificar.setEnabled(True)
         self.btnEliminarFila.setEnabled(True)
+        self.lblColumna.setText(self.tblMercaderia.horizontalHeaderItem(column).text())
 
     
     def marcarFila(self,row,column):
+        """
+        Habilita el boton de eliminar fila, para poder eliminar un producto del carrito"""
         if row != self.tblCarrito.rowCount()-1:
             self.__rowCarrito= row
             self.btnEliminar.setEnabled(True)
@@ -246,6 +263,8 @@ class clsTable(QtWidgets.QMainWindow):
 
 
     def loadTable(self):
+        """
+        Carga la tabla con todos los productos de la tienda"""
         try:
             if self.__idRolUsuario == 0:
                 result = self.objProducto.getDataAdmin()
@@ -259,7 +278,6 @@ class clsTable(QtWidgets.QMainWindow):
                 self.tblMercaderia.setRowCount(0)
                 self.tblMercaderia.setColumnCount(11)
                 self.tblMercaderia.setHorizontalHeaderLabels(["ID", "Codigo", "Tipo", "Marca","Proveedor","Origen", "Modelo", "Color", "Talle","Unidades", "Precio"])
-            self.__numColumns = [str(i) for i in range(1,self.tblMercaderia.columnCount()+1)]
             self.tabla=[]
             while self.tblMercaderia.rowCount():
                 self.tblMercaderia.removeRow(0)
@@ -288,6 +306,8 @@ class clsTable(QtWidgets.QMainWindow):
         else: event.ignore()
     
     def eliminarDeTabla(self, idProducto):
+        """
+        Elimina un producto de la tabla de productos"""
         i= o
         while i <len(self.tabla) and tabla[i][0]!= idProducto:
             i+=1
@@ -296,6 +316,8 @@ class clsTable(QtWidgets.QMainWindow):
 
 
     def delete(self):
+        """
+        Responde al click del boton eliminar fila de la tabla de productos"""
         if self.__row>-1 and self.__column>-1:
             ID = int(self.tblMercaderia.item(self.__row, 0).text())
             try:
@@ -309,10 +331,11 @@ class clsTable(QtWidgets.QMainWindow):
             print ("Error. No seleccionó fila")
     
     def ordenar(self):
-        col = int(self.cboColumna.currentText())-1
+        """ 
+        Ordena la tabla de productos segun la columna que se haya seleccionado para realizar la accion"""
         for i in range(len(self.tabla)-1):
             for j in range(i+1,len(self.tabla)):
-                if self.tabla[i][col] > self.tabla[j][col]:
+                if self.tabla[i][self.__column] > self.tabla[j][self.__column]:
                     self.tabla[i], self.tabla[j] = self.tabla[j],self.tabla[i]
         rowI=0
         for row in self.tabla:
@@ -326,7 +349,10 @@ class clsTable(QtWidgets.QMainWindow):
         self.tblMercaderia.resizeColumnsToContents()
         self.tblMercaderia.resizeRowsToContents()
 
+  
+    """
     def buscarTabla(self, indice):
+        #Metodo aparentemente deprecado
         i = 0
         while i < len(self.tabla) and int(self.__tabla[i][0])!=indice:
             i+=1
@@ -334,15 +360,19 @@ class clsTable(QtWidgets.QMainWindow):
             return i
         else: 
             return -1
-
+    """
 
     def vender(self):
+        """ 
+        Metodo del carrito que lleva a una vista donde se concretará la venta"""
         if self.tblCarrito.rowCount()==0:
             self.cargarCarro()
         self.cv = formVenta.clsConcretarVenta(self)
         self.cv.show()
 
     def setupCarritoVacio(self):
+        """ 
+        Cuando el carrito está vacio, este metodo configura botones y etiquetas para mantener la coherencia"""
         self.btnEliminar.setEnabled(False)
         self.btnLimpiarCarrito.setEnabled(False)
         if self.__row==-1:
@@ -351,11 +381,15 @@ class clsTable(QtWidgets.QMainWindow):
 
     
     def setupCarritoOcupado(self):
+        """ Cuando el carrito no esta vacio, este metodo habilita las vistas para mantener la coherencia
+        """
         self.btnLimpiarCarrito.setEnabled(True)
         self.btnVender.setEnabled(True)
 
 
     def limpiarCarrito(self):
+        """ 
+        Elimina el carrito de un usuario"""
         try:
             self.objCarrito.deleteCarrito(self.__idUser)
             self.loadCarrito(self.tblCarrito)
@@ -365,6 +399,15 @@ class clsTable(QtWidgets.QMainWindow):
 
     @QtCore.pyqtSlot(QtCore.QModelIndex)
     def dcGrilla(self, index):
+        """ 
+        Realiza distintas acciones para el doble click en la tabla de productos, según el rol del usuario y según la columna clickeada
+        Admin: 
+        doble click en columnna:
+            Proveedores: Muestra informacion del proveedor
+            otra: Pide cantidad de productos para cargarlo en le carrito 
+
+        Vendedor/Cliente: Pide cantidad de productos para cargarlo en le carrito 
+        """
         if self.__idRolUsuario== 0:
             if self.__column==4:
                 self.p= formProveedor.clsFormProveedor(self,'cm',self.__row)
@@ -376,15 +419,25 @@ class clsTable(QtWidgets.QMainWindow):
         
 
     def update(self):
+        """" 
+        Abre ventana con informacion del producto seleccionado con la posibilidad de modificarla"""
         self.w = formProducto.clsFormProducto(self.tblMercaderia,self.tabla,self.__row)
         self.w.show()
 
     def insert(self):
+        """ 
+        Permite cargar un producto en la taba, mediante una venta de producto vacia
+        """
         self.w = formProducto.clsFormProducto(self.tblMercaderia,self.tabla)
         self.w.show()
         
             
     def getCantidad(self):
+        """ 
+        InputDialog que pide cantidad
+        El usuario debe ingresar un valor mayor o igual  1
+        devuelve 0 si el usuario cancela 
+        """
         try:
             cantidad ,ok = QInputDialog().getText(self, "Venta",
                                         "Cantidad: ", QLineEdit.Normal,)
@@ -399,6 +452,9 @@ class clsTable(QtWidgets.QMainWindow):
             return self.getCantidad()
 
     def cargarCarro(self):
+        """ 
+        Carga la tabla carrito con un registro nuevo
+        Si el producto ya existia en el carrito, suma la nueva cantidad"""
         try:
             idProducto  = int(self.tblMercaderia.item(self.__row,0).text())
             cantidad =  self.getCantidad()  #0 si cancela
@@ -423,7 +479,8 @@ class clsTable(QtWidgets.QMainWindow):
                 print('Error en la carga del carro ' + str(e))
 
     def filterBy(self):
-        columna = int(self.cboColumna.currentText())-1
+        """ 
+        Ordena la vista segun la columna seleccionada por el usuario y el texto ingresado en el cuadro de busqueda"""
         #Vacío la tabla
         while self.tblMercaderia.rowCount()>0:
             self.tblMercaderia.removeRow(0)
@@ -431,7 +488,7 @@ class clsTable(QtWidgets.QMainWindow):
         reader = self.tabla
         for row in reader:
             columns = len(row)
-            if str(self.ledBusqueda.text()).lower() in str(row[columna]).lower():
+            if str(self.ledBusqueda.text()).lower() in str(row[self.__column]).lower():
                 self.tblMercaderia.setRowCount(rowI+1)
                 for i in range(columns):
                         cell = QTableWidgetItem(str(row[i]))

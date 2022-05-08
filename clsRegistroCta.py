@@ -11,6 +11,8 @@ import clsSendMail as EnviarMail
 from PyQt5.QtWidgets import *
 
 class clsRegistroCta(QtWidgets.QMainWindow):
+    """ 
+    Esta clase permite cargar un nuevo usuario"""
     def __init__(self,fila=None,tabla=None):
        super(clsRegistroCta, self).__init__()
        uic.loadUi('ui files/registroCta.ui',self)

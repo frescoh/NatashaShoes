@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>378</height>
+    <width>871</width>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Lista de usuarios</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 191);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTableWidget" name="tblData">
@@ -19,7 +22,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>771</width>
+      <width>851</width>
       <height>281</height>
      </rect>
     </property>
@@ -27,7 +30,7 @@
    <widget class="QPushButton" name="btnSalir">
     <property name="geometry">
      <rect>
-      <x>690</x>
+      <x>770</x>
       <y>300</y>
       <width>90</width>
       <height>28</height>
@@ -40,7 +43,7 @@
    <widget class="QPushButton" name="btnAgregar">
     <property name="geometry">
      <rect>
-      <x>115</x>
+      <x>545</x>
       <y>300</y>
       <width>111</width>
       <height>28</height>
@@ -53,7 +56,7 @@
    <widget class="QPushButton" name="btnActualizar">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>440</x>
       <y>300</y>
       <width>93</width>
       <height>28</height>
@@ -66,7 +69,7 @@
    <widget class="QPushButton" name="btnEliminar">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>670</x>
       <y>300</y>
       <width>93</width>
       <height>28</height>
@@ -76,16 +79,55 @@
      <string>Eliminar</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>26</height>
-    </rect>
-   </property>
+   <widget class="QCheckBox" name="cbAdmin">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>310</y>
+      <width>70</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Admin</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cbVendedor">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>310</y>
+      <width>70</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Vendedor</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cbCliente">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>310</y>
+      <width>70</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cliente</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="ledBuscar">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>300</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
