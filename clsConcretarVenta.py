@@ -64,17 +64,13 @@ class clsConcretarVenta(QtWidgets.QMainWindow):
             self.lblDNI.setVisible(False)
             self.btnConsultarDNI.setVisible(False)
             self.btnNuevoCliente.setVisible(False)
-            self. btnFinalizar.setVisible(False)
-            self.btnFinalizar.move(30,510)
-            self.btnCancelar.move(370,510)
             self.resize(471,585)
 
-
+        self. btnFinalizar.setVisible(False)
         self.cboMedioDePago.addItems(self.getList(self.objMedioDePago.getData()))
 
         self.btnFinalizar.clicked.connect(self.cargarVenta)
         self.btnConsultarDNI.clicked.connect(self.consultarUsuario)
-        self.btnCancelar.clicked.connect(self.close)
         self.reservar()
         self.clsTabla.loadCarrito(self.tblCarrito)
         self.clsTabla.loadCarrito(self.clsTabla.tblCarrito)

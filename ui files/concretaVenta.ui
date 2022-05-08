@@ -139,10 +139,10 @@
    <widget class="QPushButton" name="btnFinalizar">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>570</y>
-      <width>75</width>
-      <height>25</height>
+      <x>130</x>
+      <y>560</y>
+      <width>161</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -150,26 +150,11 @@
       <pointsize>8</pointsize>
      </font>
     </property>
-    <property name="text">
-     <string>Finalizar</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnCancelar">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>570</y>
-      <width>75</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(85, 255, 127);</string>
     </property>
     <property name="text">
-     <string>Cancelar</string>
+     <string>✍🏼 Finalizar</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnConsultarDNI">
@@ -247,7 +232,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>465</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

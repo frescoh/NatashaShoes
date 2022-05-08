@@ -59,6 +59,7 @@ class clsTable(QtWidgets.QMainWindow):
         self.btnModificar.setEnabled(False)
         self.btnEliminarFila.setEnabled(False)
         items = self.cboCondicion.addItems(['en','<','=','>'])
+        self.btnActualizar.setIcon(QIcon('ui files/refresh.png'))
         
 
         # Acciones Botones
@@ -88,6 +89,9 @@ class clsTable(QtWidgets.QMainWindow):
         
         # Line edit
         self.ledBusqueda.textChanged.connect(self.filterBy)
+
+        #Combo
+        self.cboCondicion.currentTextChanged.connect(self.filterBy)
 
         action = self.ledBusqueda.addAction(QIcon("ui files/search.png"), QLineEdit.LeadingPosition)     
         
@@ -332,7 +336,7 @@ class clsTable(QtWidgets.QMainWindow):
     
     def ordenar(self):
         """ 
-        Ordena la tabla de productos segun la columna que se haya seleccionado para realizar la accion"""
+        Ordena la tabla de productos según la columna que se haya seleccionado para realizar la accion"""
         for i in range(len(self.tabla)-1):
             for j in range(i+1,len(self.tabla)):
                 if self.tabla[i][self.__column] > self.tabla[j][self.__column]:
@@ -478,25 +482,79 @@ class clsTable(QtWidgets.QMainWindow):
         except Exception as e:
                 print('Error en la carga del carro ' + str(e))
 
-    def filterBy(self):
-        """ 
-        Ordena la vista segun la columna seleccionada por el usuario y el texto ingresado en el cuadro de busqueda"""
-        #Vacío la tabla
-        while self.tblMercaderia.rowCount()>0:
-            self.tblMercaderia.removeRow(0)
+    def getCoincidencias(self):
+        while self.tblMercaderia.rowCount()>0: 
+            self.tblMercaderia.removeRow(0) #Vaciado de la tabla
         rowI=0
         reader = self.tabla
+        colNumericas = ['ID','Talle','Unidades','Precio de Compra','Precio de Venta']
+        HeadColText = self.tblMercaderia.horizontalHeaderItem(self.__column).text()
+        isNumerica = HeadColText in colNumericas
+        
         for row in reader:
+            if isNumerica:
+                celda= float(row[self.__column])
+                buscado= float(self.ledBusqueda.text())
+            else:
+                celda= str(row[self.__column]).lower()
+                buscado= str(self.ledBusqueda.text()).lower()
+
             columns = len(row)
-            if str(self.ledBusqueda.text()).lower() in str(row[self.__column]).lower():
-                self.tblMercaderia.setRowCount(rowI+1)
-                for i in range(columns):
-                        cell = QTableWidgetItem(str(row[i]))
-                        cell.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)  # make cell not editable
-                        self.tblMercaderia.setItem(rowI,i,cell)
-                rowI += 1
+            if self.cboCondicion.currentText()=='en':
+                if str(self.ledBusqueda.text()).lower() in str(row[self.__column]).lower():
+                    self.tblMercaderia.setRowCount(rowI+1)
+                    for i in range(columns):
+                            cell = QTableWidgetItem(str(row[i]))
+                            cell.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)  # make cell not editable
+                            self.tblMercaderia.setItem(rowI,i,cell)
+                    rowI += 1
+            
+            elif self.cboCondicion.currentText()=='<':
+                if  celda < buscado :
+                    self.tblMercaderia.setRowCount(rowI+1)
+                    for i in range(columns):
+                            cell = QTableWidgetItem(str(row[i]))
+                            cell.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)  # make cell not editable
+                            self.tblMercaderia.setItem(rowI,i,cell)
+                    rowI += 1
+            elif self.cboCondicion.currentText()=='=':
+                if  celda == buscado :
+                    self.tblMercaderia.setRowCount(rowI+1)
+                    for i in range(columns):
+                            cell = QTableWidgetItem(str(row[i]))
+                            cell.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)  # make cell not editable
+                            self.tblMercaderia.setItem(rowI,i,cell)
+                    rowI += 1
+            elif self.cboCondicion.currentText()=='>':
+                if  celda > buscado :
+                    self.tblMercaderia.setRowCount(rowI+1)
+                    for i in range(columns):
+                            cell = QTableWidgetItem(str(row[i]))
+                            cell.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)  # make cell not editable
+                            self.tblMercaderia.setItem(rowI,i,cell)
+                    rowI += 1
+
         self.tblMercaderia.resizeColumnsToContents()
         self.tblMercaderia.resizeRowsToContents()
+    
+
+
+    def filterBy(self):
+        """ 
+        en caso de que el line edit text no este vacio
+        Ordena la vista segun la columna seleccionada por el usuario, el texto ingresado en el cuadro de busqueda y la condicion de filtrado
+        Condicion: 
+        en: Devuelve todos los registros que contienen la cadena de caracteres ingresados
+        <:  Devuelve todos los registros que sean menores al valor ingresado
+        =:  Devuelve los registros que sean exactamente iguales al valor ingresado
+        >:  Devuelve los registros que sean mayores al valor ingresado
+        
+        si LED está vacio, carga la tabla normalmente"""
+        if self.ledBusqueda.text()!='' and self.__column!=-1:
+            self.getCoincidencias()
+        else:
+            self.loadTable()
+        
 
 
 
